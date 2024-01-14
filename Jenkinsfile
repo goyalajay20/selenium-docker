@@ -26,7 +26,7 @@ pipeline {
                     // registry url is blank for dockerhub
                    // docker.withRegistry('', 'dockerhub-creds') {
                         app.push("latest")
-                    }
+                    //}
                 }
             }
         }
