@@ -1,36 +1,35 @@
-pipeline
-{
-    agent any
-    stages
-    {
-        stage('Build Jar'){
-            steps{
-               bat "mvn clean package -DskipTests"
+pipeline {
+    agent none
+    stages {
+        stage('Build Jar') {
+            agent {
+                docker {
+                    image 'maven:3.9.3-eclipse-temurin-17-focal'
+                    args '-u root -v C:/Users/AJAY/.m2:/root/.m2'
+                }
+            }
+            steps {
+                sh 'mvn clean package -DskipTests'
             }
         }
-        stage('Build-image'){
-            steps{
-                bat "docker build -t=ajaygoyal20/selenium ."
-            }
-        }
-        stage('Push Image'){
-//             environment{
-//                 DOCKER_HUB = Credentials('dockerhub-creds')
-//             }
-            steps{
-                
-//                 sh 'echo "Service user is ${DOCKER_HUB_USR}"'
-//                 sh 'echo "Service password is ${DOCKER_HUB_PSW}"'
-//                 bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
-                bat "docker push ajaygoyal20/selenium"
+        stage('Build Image') {
+            steps {
+                script {
+                    app = docker.build('ajaygoyal20/selenium')
+                }
             }
         }
 
+        stage('Push Image'){
+            steps{
+                script {
+                    // registry url is blank for dockerhub
+                    docker.withRegistry('', 'dockerhub-creds') {
+                        app.push("latest")
+                    }
+                }
+            }
+        }
 
     }
-//     post {
-//         always {
-//             bat "docker logout"
-//         }
-//     }
 }
