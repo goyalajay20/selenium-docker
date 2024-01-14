@@ -14,19 +14,14 @@ pipeline
             }
         }
         stage('Push Image'){
-            environment{
-                DOCKER_HUB = Credentials('dockerhub-creds')
-            }
+//             environment{
+//                 DOCKER_HUB = Credentials('dockerhub-creds')   credentials method is not working in local system.
+//             }
             steps{
-//              sh 'echo "Service user is ${DOCKER_HUB_USR}"'
-//              sh 'echo "Service password is ${DOCKER_HUB_PSW}"'
-                bat 'echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin'
-                bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
+//              bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
                 bat "docker push ajaygoyal20/selenium"
             }
         }
-
-
     }
     post {
         always {
