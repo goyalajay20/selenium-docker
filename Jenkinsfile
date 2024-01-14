@@ -14,9 +14,20 @@ pipeline
             }
         }
         stage('Push Image'){
+            environment{
+                DOCKER_HUB = Credentials('dockerhub-creds');
+            }
             steps{
+                //bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
                 bat "docker push ajaygoyal20/selenium"
             }
         }
+
+
     }
+    // post { 
+    //     always {
+    //         bat "docker logout"
+    //     }
+    // }
 }
