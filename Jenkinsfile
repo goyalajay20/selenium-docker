@@ -5,12 +5,12 @@ pipeline
     {
         stage('Build Jar'){
             steps{
-               bat "mvn clean package -DskipTests"
+               bat 'mvn clean package -DskipTests'
             }
         }
         stage('Build-image'){
             steps{
-                bat "docker build -t=ajaygoyal20/selenium ."
+                bat 'docker build -t=ajaygoyal20/selenium:latest .'
             }
         }
         stage('Push Image'){
@@ -19,7 +19,9 @@ pipeline
 //             }
             steps{
 //              bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
-             bat "docker push ajaygoyal20/selenium"
+                bat 'docker push ajaygoyal20/selenium:latest'
+                bat "docker tag ajaygoyal20/selenium:latest ajaygoyal20/selenium:${env.BUILD_NUMBER}"
+                bat "docker push ajaygoyal20/selenium:${env.BUILD_NUMBER}"
             }
         }
     }
