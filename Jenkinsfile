@@ -14,20 +14,20 @@ pipeline
             }
         }
         stage('Push Image'){
-//             environment{
-//                 DOCKER_HUB = Credentials('dockerhub-creds')  // credentials method is not working in local system.
-//             }
+            environment{
+                DOCKER_HUB = credentials('dockerhub-creds')  // credentials method is not working in local system.
+            }
             steps{
-//              bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
+                bat 'docker login -u %DOCKER_HUB_USR% -p %DOCKER_HUB_PSW%'
                 bat 'docker push ajaygoyal20/selenium:latest'
                 bat "docker tag ajaygoyal20/selenium:latest ajaygoyal20/selenium:${env.BUILD_NUMBER}"
                 bat "docker push ajaygoyal20/selenium:${env.BUILD_NUMBER}"
             }
         }
     }
-//     post {
-//         always {
-//             bat "docker logout"
-//         }
-//     }
+    post {
+        always {
+            bat "docker logout"
+        }
+    }
 }
